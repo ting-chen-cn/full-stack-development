@@ -8,30 +8,25 @@ const App = (props) => {
     const random = Math.floor(Math.random() * 6);
     setSelected(random);
   };
-  const [points, setVote] = useState({
-    0: 0,
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-  });
+  const [points, setVote] = useState([0, 0, 0, 0, 0, 0]);
 
   const handleVote = () => {
     console.log(points);
-    let Copy = {
-      ...points,
-    };
+    let Copy = [...points];
     Copy[selected] += 1;
     setVote(Copy);
   };
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <div>{props.anecdotes[selected]}</div>
       <Display value={points[selected]} />
       <button onClick={handleVote}>vote</button>
       <button onClick={handleSetSelected}>next anecdote</button>
+      <h1>Anecdote with most votes</h1>
+      <div>{props.anecdotes[points.indexOf(Math.max(...points))]}</div>
+      <Display value={Math.max(...points)} />
     </div>
   );
 };
