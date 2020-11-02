@@ -1,17 +1,37 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
+const Display = (props) => <div>has {props.value} votes</div>;
 
 const App = (props) => {
   const [selected, setSelected] = useState(0);
-  const handlesetSelected = () => {
-    var random = Math.floor(Math.random() * 6);
+  const handleSetSelected = () => {
+    const random = Math.floor(Math.random() * 6);
     setSelected(random);
+  };
+  const [points, setVote] = useState({
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+  });
+
+  const handleVote = () => {
+    console.log(points);
+    let Copy = {
+      ...points,
+    };
+    Copy[selected] += 1;
+    setVote(Copy);
   };
 
   return (
     <div>
       <div>{props.anecdotes[selected]}</div>
-      <button onClick={handlesetSelected}>next anecdote</button>
+      <Display value={points[selected]} />
+      <button onClick={handleVote}>vote</button>
+      <button onClick={handleSetSelected}>next anecdote</button>
     </div>
   );
 };
