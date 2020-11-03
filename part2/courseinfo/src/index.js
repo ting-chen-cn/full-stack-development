@@ -29,18 +29,23 @@ const Part = (props) => {
   );
 };
 const Total = (props) => {
+  const initialValue = 0;
+  const total = props.parts.reduce(
+    (accumulator, currentValue) => accumulator + currentValue.exercises,
+    initialValue
+  );
+
   return (
     <div>
       <b>
-        total of{" "}
-        {props.parts[0].exercises +
-          props.parts[1].exercises +
-          props.parts[2].exercises}
-        exercises
+        total of &nbsp;{""}
+        {total}
+        &nbsp; exercises
       </b>
     </div>
   );
 };
+
 const Course = ({ course }) => {
   return (
     <div>
