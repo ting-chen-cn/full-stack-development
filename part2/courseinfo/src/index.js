@@ -28,12 +28,25 @@ const Part = (props) => {
     </div>
   );
 };
-
+const Total = (props) => {
+  return (
+    <div>
+      <b>
+        total of{" "}
+        {props.parts[0].exercises +
+          props.parts[1].exercises +
+          props.parts[2].exercises}
+        exercises
+      </b>
+    </div>
+  );
+};
 const Course = ({ course }) => {
   return (
     <div>
       <Header course={course.name} />
       <Content parts={course.parts} />
+      <Total parts={course.parts} />
     </div>
   );
 };
