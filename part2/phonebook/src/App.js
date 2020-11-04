@@ -9,8 +9,15 @@ const App = () => {
     const noteObject = {
       name: newName,
     };
-    setPersons(persons.concat(noteObject));
-    setNewName("");
+    console.log(persons.name);
+    // persons.name.indexOf(newName)
+    let pos = persons.find((n) => n.name === `${newName}`);
+    if (pos === undefined) {
+      setPersons(persons.concat(noteObject));
+      setNewName("");
+    } else {
+      window.alert(`${newName} is already added to phonebook`);
+    }
   };
   const handlePersonChange = (event) => {
     console.log(event.target.value);
