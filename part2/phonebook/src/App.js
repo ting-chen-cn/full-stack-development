@@ -1,5 +1,51 @@
 import React, { useState } from "react";
 
+const PersonForm = ({
+  addPerson,
+  newName,
+  newNumber,
+  handelNumberChange,
+  handlePersonChange,
+}) => {
+  return (
+    <div>
+      <form onSubmit={addPerson}>
+        <div>
+          name: <input value={newName} onChange={handlePersonChange} />
+        </div>
+        <div>
+          number: <input value={newNumber} onChange={handelNumberChange} />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+    </div>
+  );
+};
+const Filter = ({ newSearchPerson, handleSearchPerson }) => {
+  return (
+    <div>
+      <>
+        filter shown with{" "}
+        <input value={newSearchPerson} onChange={handleSearchPerson} />
+      </>
+    </div>
+  );
+};
+const Persons = ({ searchedPerson }) => {
+  return (
+    <div>
+      <ul>
+        {searchedPerson.map((note) => (
+          <li key={note.name}>
+            {note.name}&nbsp;{note.number}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 const App = () => {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", number: "040-123456" },
@@ -52,30 +98,20 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <ul>
-        filter shown with{" "}
-        <input value={newSearchPerson} onChange={handleSearchPerson} />
-      </ul>
-      <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handlePersonChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handelNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <ul>
-        {searchedPerson.map((note) => (
-          <li key={note.name}>
-            {note.name}&nbsp;{note.number}
-          </li>
-        ))}
-      </ul>
+      <Filter
+        newSearchPerson={newSearchPerson}
+        handleSearchPerson={handleSearchPerson}
+      />
+      <h3>add a new</h3>
+      <PersonForm
+        addPerson={addPerson}
+        newName={newName}
+        newNumber={newNumber}
+        handelNumberChange={handelNumberChange}
+        handlePersonChange={handlePersonChange}
+      />
+      <h3>Numbers</h3>
+      <Persons searchedPerson={searchedPerson} />
     </div>
   );
 };
