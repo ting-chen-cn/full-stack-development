@@ -1,29 +1,49 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const Filter = ({ searchCountries }) => {
+const OneCountry = ({ country }) => {
+  return (
+    <div>
+      <h1>{country.name}</h1>
+      <p>capital&nbsp;{country.capital}</p>
+      <p>population&nbsp;{country.population}</p>
+      <h2>languages</h2>
+      <ul>
+        {country.languages.map((note) => (
+          <li key={note.name}>{note.name}</li>
+        ))}
+      </ul>
+      <img src={country.flag} alt='' width={200} />
+    </div>
+  )
+}
+
+const ManyCountries = ({ country, setSearchCountries }) => {
+  return (
+    <>
+      <li>{country.name}</li>
+      <button onClick={() => setSearchCountries([country])}>
+        show
+      </button>
+    </>
+  )
+}
+const Filter = ({ searchCountries, setSearchCountries }) => {
   return searchCountries.length > 10 ? (
     <div>
       <p>Too many matches, specify another filter</p>
     </div>
   ) : searchCountries.length === 1 ? (
-    <div>
-      <h1>{searchCountries[0].name}</h1>
-      <p>capital&nbsp;{searchCountries[0].capital}</p>
-      <p>population&nbsp;{searchCountries[0].population}</p>
-      <h2>languages</h2>
-      <ul>
-        {searchCountries[0].languages.map((note) => (
-          <li key={note.name}>{note.name}</li>
-        ))}
-      </ul>
-      <img src={searchCountries[0].flag} alt='' width={200} />
-    </div>
+    <OneCountry country={searchCountries[0]} />
   ) : (
     <div>
       <ul>
         {searchCountries.map((note) => (
-          <li key={note.name}>{note.name}</li>
+          <ManyCountries
+            key={note.name}
+            country={note}
+            setSearchCountries={setSearchCountries}
+          />
         ))}
       </ul>
     </div>
@@ -62,7 +82,10 @@ function App() {
       <>
         find <input value={search} onChange={handleSearch} />
       </>
-      <Filter searchCountries={searchCountries} />
+      <Filter
+        searchCountries={searchCountries}
+        setSearchCountries={setSearchCountries}
+      />
     </div>
   )
 }
