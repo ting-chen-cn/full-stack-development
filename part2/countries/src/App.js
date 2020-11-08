@@ -20,12 +20,12 @@ const OneCountry = ({ country }) => {
 
 const ManyCountries = ({ country, setSearchCountries }) => {
   return (
-    <>
-      <li>{country.name}</li>
+    <div>
+      {country.name}{' '}
       <button onClick={() => setSearchCountries([country])}>
         show
       </button>
-    </>
+    </div>
   )
 }
 const Filter = ({ searchCountries, setSearchCountries }) => {
@@ -37,15 +37,13 @@ const Filter = ({ searchCountries, setSearchCountries }) => {
     <OneCountry country={searchCountries[0]} />
   ) : (
     <div>
-      <ul>
-        {searchCountries.map((note) => (
-          <ManyCountries
-            key={note.name}
-            country={note}
-            setSearchCountries={setSearchCountries}
-          />
-        ))}
-      </ul>
+      {searchCountries.map((note) => (
+        <ManyCountries
+          key={note.name}
+          country={note}
+          setSearchCountries={setSearchCountries}
+        />
+      ))}
     </div>
   )
 }
