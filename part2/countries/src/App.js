@@ -2,6 +2,21 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
 const OneCountry = ({ country }) => {
+  const api_key = process.env.REACT_APP_API_KEY
+  const baseURL = 'http://api.weatherstack.com/'
+  const [weather, setWeather] = useState('')
+  const url =
+    baseURL +
+    'current?access_key=' +
+    api_key +
+    '&query=' +
+    country.capital
+  useEffect(() => {
+    console.log(url)
+    axios.get(url).then((response) => {
+      setWeather(response.data.current)
+    })
+  }, [url])
   return (
     <div>
       <h1>{country.name}</h1>
@@ -14,6 +29,12 @@ const OneCountry = ({ country }) => {
         ))}
       </ul>
       <img src={country.flag} alt='' width={200} />
+      <h2>Weather in {country.capital}</h2>
+      <p>temperature: {weather.temperature}</p>
+      <img src={weather.weather_icons} alt='' width={50} />
+      <p>
+        wind: {weather.wind_speed} mph direction {weather.wind_dir}
+      </p>
     </div>
   )
 }
