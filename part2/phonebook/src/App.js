@@ -11,19 +11,11 @@ const App = () => {
   const [newSearchPerson, setSearchPerson] = useState('')
   const [searchedPerson, setSearched] = useState(persons)
   useEffect(() => {
-    //   console.log('effect')
-    //   axios.get('http://localhost:3001/persons').then((response) => {
-    //     console.log('promise fulfilled')
-    //     setPersons(response.data)
-    //     setSearched(response.data)
-    //   })
-    // }
     noteService.getAll().then((initialNotes) => {
       setPersons(initialNotes)
       setSearched(initialNotes)
     })
   }, [])
-
   const addPerson = (event) => {
     event.preventDefault()
     const noteObject = {
@@ -33,15 +25,6 @@ const App = () => {
 
     let pos = persons.find((n) => n.name === `${newName}`)
     if (pos === undefined) {
-      // setPersons(persons.concat(noteObject))
-      // setNewName('')
-      // setNewNumber('')
-      // let a = persons.concat(noteObject)
-
-      // let result = a.filter((w) =>
-      //   w.name.toLowerCase().includes(newSearchPerson.toLowerCase())
-      // )
-      // setSearched(result)
       noteService.create(noteObject).then((changedNote) => {
         setPersons(persons.concat(changedNote))
         setNewName('')
@@ -71,6 +54,15 @@ const App = () => {
     setSearched(result)
   }
 
+  const handleDeleteOf = (id) => {
+    const deletePerson = persons.find((n) => n.id === id)
+    window.alert(`Delete '${deletePerson.name}' ?`)
+    noteService.deleteOf(id).then(() => {
+      setPersons(persons.filter((n) => n.id !== id))
+      setSearched(persons.filter((n) => n.id !== id))
+    })
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -87,7 +79,10 @@ const App = () => {
         handlePersonChange={handlePersonChange}
       />
       <h3>Numbers</h3>
-      <Persons searchedPerson={searchedPerson} />
+      <Persons
+        searchedPerson={searchedPerson}
+        handelDelete={handleDeleteOf}
+      />
     </div>
   )
 }
