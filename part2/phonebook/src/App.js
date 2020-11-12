@@ -1,57 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Person'
+import Filter from './components/Filter'
+import noteService from './services/note'
 
-const PersonForm = ({
-  addPerson,
-  newName,
-  newNumber,
-  handelNumberChange,
-  handlePersonChange,
-}) => {
-  return (
-    <div>
-      <form onSubmit={addPerson}>
-        <div>
-          name:{' '}
-          <input value={newName} onChange={handlePersonChange} />
-        </div>
-        <div>
-          number:{' '}
-          <input value={newNumber} onChange={handelNumberChange} />
-        </div>
-        <div>
-          <button type='submit'>add</button>
-        </div>
-      </form>
-    </div>
-  )
-}
-const Filter = ({ newSearchPerson, handleSearchPerson }) => {
-  return (
-    <div>
-      <>
-        filter shown with{' '}
-        <input
-          value={newSearchPerson}
-          onChange={handleSearchPerson}
-        />
-      </>
-    </div>
-  )
-}
-const Persons = ({ searchedPerson }) => {
-  return (
-    <div>
-      <ul>
-        {searchedPerson.map((note) => (
-          <li key={note.name}>
-            {note.name}&nbsp;{note.number}
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
@@ -59,14 +11,18 @@ const App = () => {
   const [newSearchPerson, setSearchPerson] = useState('')
   const [searchedPerson, setSearched] = useState(persons)
   useEffect(() => {
-    console.log('effect')
-    axios.get('http://localhost:3001/persons').then((response) => {
-      console.log('promise fulfilled')
-      setPersons(response.data)
-      setSearched(response.data)
+    //   console.log('effect')
+    //   axios.get('http://localhost:3001/persons').then((response) => {
+    //     console.log('promise fulfilled')
+    //     setPersons(response.data)
+    //     setSearched(response.data)
+    //   })
+    // }
+    noteService.getAll().then((initialNotes) => {
+      setPersons(initialNotes)
+      setSearched(initialNotes)
     })
   }, [])
-  console.log('render', persons.length, 'notes')
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -77,15 +33,25 @@ const App = () => {
 
     let pos = persons.find((n) => n.name === `${newName}`)
     if (pos === undefined) {
-      setPersons(persons.concat(noteObject))
-      setNewName('')
-      setNewNumber('')
-      let a = persons.concat(noteObject)
+      // setPersons(persons.concat(noteObject))
+      // setNewName('')
+      // setNewNumber('')
+      // let a = persons.concat(noteObject)
 
-      let result = a.filter((w) =>
-        w.name.toLowerCase().includes(newSearchPerson.toLowerCase())
-      )
-      setSearched(result)
+      // let result = a.filter((w) =>
+      //   w.name.toLowerCase().includes(newSearchPerson.toLowerCase())
+      // )
+      // setSearched(result)
+      noteService.create(noteObject).then((changedNote) => {
+        setPersons(persons.concat(changedNote))
+        setNewName('')
+        setNewNumber('')
+        let a = persons.concat(changedNote)
+        let result = a.filter((w) =>
+          w.name.toLowerCase().includes(newSearchPerson.toLowerCase())
+        )
+        setSearched(result)
+      })
     } else {
       window.alert(`${newName} is already added to phonebook`)
     }
