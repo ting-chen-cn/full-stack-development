@@ -56,11 +56,12 @@ const App = () => {
 
   const handleDeleteOf = (id) => {
     const deletePerson = persons.find((n) => n.id === id)
-    window.alert(`Delete '${deletePerson.name}' ?`)
-    noteService.deleteOf(id).then(() => {
-      setPersons(persons.filter((n) => n.id !== id))
-      setSearched(persons.filter((n) => n.id !== id))
-    })
+    if (window.confirm(`Delete '${deletePerson.name}' ?`)) {
+      noteService.deleteOf(id).then(() => {
+        setPersons(persons.filter((n) => n.id !== id))
+        setSearched(persons.filter((n) => n.id !== id))
+      })
+    }
   }
 
   return (
