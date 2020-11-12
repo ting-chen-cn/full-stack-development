@@ -23,20 +23,42 @@ const App = () => {
       number: newNumber,
     }
 
-    let pos = persons.find((n) => n.name === `${newName}`)
+    const pos = persons.find((n) => n.name === `${newName}`)
+
     if (pos === undefined) {
       noteService.create(noteObject).then((changedNote) => {
-        setPersons(persons.concat(changedNote))
+        const add = persons.concat(changedNote)
+        setPersons(add)
         setNewName('')
         setNewNumber('')
-        let a = persons.concat(changedNote)
-        let result = a.filter((w) =>
+        const result = add.filter((w) =>
           w.name.toLowerCase().includes(newSearchPerson.toLowerCase())
         )
         setSearched(result)
       })
     } else {
-      window.alert(`${newName} is already added to phonebook`)
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        noteService
+          .update(pos.id, noteObject)
+          .then((returnedNote) => {
+            const changed = persons.map((note) =>
+              note.id !== pos.id ? note : returnedNote
+            )
+            setPersons(changed)
+            setNewName('')
+            setNewNumber('')
+            const result = changed.filter((w) =>
+              w.name
+                .toLowerCase()
+                .includes(newSearchPerson.toLowerCase())
+            )
+            setSearched(result)
+          })
+      }
     }
   }
 
