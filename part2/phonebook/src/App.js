@@ -103,10 +103,6 @@ const App = () => {
           setTimeout(() => {
             setErrorMessage(null)
           }, 5000)
-          // noteService.getAll().then((initialNotes) => {
-          //   setPersons(initialNotes)
-          //   setSearched(initialNotes)
-          // })
         })
     }
   }
