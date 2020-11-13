@@ -4,6 +4,7 @@ import Persons from './components/Person'
 import Filter from './components/Filter'
 import noteService from './services/note'
 import Notification from './components/Notification'
+import ErrorNotification from './components/ErrorNotification'
 import './index.css'
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
   const [newSearchPerson, setSearchPerson] = useState('')
   const [searchedPerson, setSearched] = useState(persons)
   const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
   useEffect(() => {
     noteService.getAll().then((initialNotes) => {
       setPersons(initialNotes)
@@ -25,9 +27,7 @@ const App = () => {
       name: newName,
       number: newNumber,
     }
-
     const pos = persons.find((n) => n.name === `${newName}`)
-
     if (pos === undefined) {
       noteService.create(noteObject).then((changedNote) => {
         const add = persons.concat(changedNote)
@@ -89,11 +89,25 @@ const App = () => {
 
   const handleDeleteOf = (id) => {
     const deletePerson = persons.find((n) => n.id === id)
-    if (window.confirm(`Delete '${deletePerson.name}' ?`)) {
-      noteService.deleteOf(id).then(() => {
-        setPersons(persons.filter((n) => n.id !== id))
-        setSearched(persons.filter((n) => n.id !== id))
-      })
+    if (window.confirm(`Delete ${deletePerson.name} ?`)) {
+      noteService
+        .deleteOf(id)
+        .then(() => {
+          setPersons(persons.filter((n) => n.id !== id))
+          setSearched(persons.filter((n) => n.id !== id))
+        })
+        .catch((error) => {
+          setErrorMessage(
+            `Information of ${deletePerson.name} has already been removed from server`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+          // noteService.getAll().then((initialNotes) => {
+          //   setPersons(initialNotes)
+          //   setSearched(initialNotes)
+          // })
+        })
     }
   }
 
@@ -101,6 +115,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={message} />
+      <ErrorNotification errorMessage={errorMessage} />
       <Filter
         newSearchPerson={newSearchPerson}
         handleSearchPerson={handleSearchPerson}
