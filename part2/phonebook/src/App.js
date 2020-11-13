@@ -3,6 +3,8 @@ import PersonForm from './components/PersonForm'
 import Persons from './components/Person'
 import Filter from './components/Filter'
 import noteService from './services/note'
+import Notification from './components/Notification'
+import './index.css'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -10,6 +12,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newSearchPerson, setSearchPerson] = useState('')
   const [searchedPerson, setSearched] = useState(persons)
+  const [message, setMessage] = useState(null)
   useEffect(() => {
     noteService.getAll().then((initialNotes) => {
       setPersons(initialNotes)
@@ -35,6 +38,10 @@ const App = () => {
           w.name.toLowerCase().includes(newSearchPerson.toLowerCase())
         )
         setSearched(result)
+        setMessage(`Added ${newName}`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
       })
     } else {
       if (
@@ -57,6 +64,10 @@ const App = () => {
                 .includes(newSearchPerson.toLowerCase())
             )
             setSearched(result)
+            setMessage(`Added  ${newName}`)
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
           })
       }
     }
@@ -89,6 +100,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter
         newSearchPerson={newSearchPerson}
         handleSearchPerson={handleSearchPerson}
